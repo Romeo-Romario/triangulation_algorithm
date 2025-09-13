@@ -80,16 +80,31 @@ struct Circle
         /*
         x1 -> a
         x2 -> b
-
         p1 -> b
         p2 -> c
-        */
-        Point mid_a_b = Point((triangle.a.x + triangle.b.x) / 2.0, (triangle.a.y + triangle.b.y) / 2.0);
-        Point mid_b_c = Point((triangle.b.x + triangle.c.x) / 2.0, (triangle.b.y + triangle.c.y) / 2.0);
 
-        /*
-        (a.y - b.y)(x - mid_a_b.x) + (b.x - a.x)(y - mid_a_b.y) = 0
-        (b.y - c.y)(x - mid_b_c.y) + (c.x - b.x)(y - mid_b_c.y) = 0
+        x1,y1 = ...
+        x2,y2 = ...
+        p1,q1 = ...
+        p2,q2 = ...
+
+        A = np.array([[y1 - y2,    x2 - x1],
+              [q1 - q2,    p2 - p1]], dtype=float)
+
+        b = np.array([
+            (y1-y2)*(x1+x2)/2 + (x2-x1)*(y1+y2)/2,
+            (q1-q2)*(p1+p2)/2 + (p2-p1)*(q1+q2)/2
+        ], dtype=float)
         */
+
+        std::vector<std::vector<double>> matrix_A = {
+            {triangle.a.y - triangle.b.y, triangle.b.x - triangle.a.x},
+            {triangle.b.y - triangle.c.y, triangle.c.x - triangle.b.x}};
+
+        std::vector<double> b = {
+            (triangle.a.y - triangle.b.y) * (triangle.b.x + triangle.a.x) / 2 + (triangle.b.x - triangle.a.x) * (triangle.a.y + triangle.b.y) / 2,
+            (triangle.b.y - triangle.c.y) * (triangle.c.x + triangle.b.x) / 2 + (triangle.c.x - triangle.b.x) * (triangle.b.y + triangle.c.y) / 2};
+
+        return Circle();
     }
 }
