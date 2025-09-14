@@ -1,5 +1,8 @@
 #include "../headers/figures.hpp"
 
+using std::cout;
+using std::endl;
+
 double distance(const Point &p1, const Point &p2)
 {
     return std::sqrt(std::pow((p2.x - p1.x), 2) + std::pow((p2.y - p1.y), 2));
@@ -35,31 +38,53 @@ double Triangle::perimeter() const
 
 Circle Circle::calculate_circumscribed_circle(const Triangle &triangle)
 {
-    // x1(x1, y1), x2(x2, y2), p1(p1, q1), p2(p2,q2)
-    /*
-    x1 -> a
-    x2 -> b
-    p1 -> b
-    p2 -> c
-    x1,y1 = ...
-    x2,y2 = ...
-    p1,q1 = ...
-    p2,q2 = ...
-    A = np.array([[y1 - y2,    x2 - x1],
-          [q1 - q2,    p2 - p1]], dtype=float)
-    b = np.array([
-        (y1-y2)*(x1+x2)/2 + (x2-x1)*(y1+y2)/2,
-        (q1-q2)*(p1+p2)/2 + (p2-p1)*(q1+q2)/2
-    ], dtype=float)
-    */
-    std::vector<std::vector<double>> matrix_A = {
-        {triangle.a.y - triangle.b.y, triangle.b.x - triangle.a.x},
-        {triangle.b.y - triangle.c.y, triangle.c.x - triangle.b.x}};
-    std::vector<double> b = {
-        (triangle.a.y - triangle.b.y) * (triangle.b.x + triangle.a.x) / 2 + (triangle.b.x - triangle.a.x) * (triangle.a.y + triangle.b.y) / 2,
-        (triangle.b.y - triangle.c.y) * (triangle.c.x + triangle.b.x) / 2 + (triangle.c.x - triangle.b.x) * (triangle.b.y + triangle.c.y) / 2};
-    auto result = solve_2_x_2_matrix(matrix_A, b);
-    Point center = Point(result.first, result.second);
+    // Now it's my time
+    double x, y;
+    Point center;
+    // Find middle points
+    Point mid_ab = Point((triangle.a.x + triangle.b.x) / 2.0, (triangle.a.y + triangle.b.y) / 2.0);
+    Point mid_bc = Point((triangle.b.x + triangle.c.x) / 2.0, (triangle.b.y + triangle.c.y) / 2.0);
+
+    // Find angle coefficients
+
+    double k_ab = (triangle.b.y - triangle.a.y) / (triangle.b.x - triangle.a.x);
+    double k_bc = (triangle.c.y - triangle.b.y) / (triangle.c.x - triangle.b.x);
+
+    // Find angle coefficients of perpendiculars m1 and m2
+    double k_m1 = -1.0 / k_ab;
+    double k_m2 = -1.0 / k_bc;
+
+    if (k_ab == 0.0)
+    {
+        ;
+        x = mid_ab.x;
+        y = k_m2 * (x - mid_bc.x) + mid_bc.y;
+        center.x = x;
+        center.y = y;
+    }
+    else if (k_bc == 0.0)
+    {
+        x = mid_bc.x;
+        y = k_m1 * (x - mid_ab.x) + mid_ab.y;
+        center.x = x;
+        center.y = y;
+    }
+    else
+    {
+        cout << "k_m1: " << k_m1 << " k_m2: " << k_m2 << endl;
+        std::vector<std::vector<double>> matrix_A = {
+            {-k_m1, 1.0},
+            {-k_m2, 1.0}};
+
+        std::vector<double> b = {
+            mid_ab.y - k_m1 * mid_ab.x,
+            mid_bc.y - k_m2 * mid_bc.x};
+
+        auto result = solve_2_x_2_matrix(matrix_A, b);
+        center.x = result.first;
+        center.y = result.second;
+    }
+
     double radius = distance(center, triangle.a);
     return Circle(center, radius);
 }
