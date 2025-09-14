@@ -81,10 +81,6 @@ bool Triangle::contains_point(const Point &p) const
     {
         return true;
     }
-    cout << "=====================" << endl;
-    cout << "a: " << a << " b: " << b << " c : " << c << endl;
-    cout << "Point that is checked: " << p << endl;
-    cout << "=====================" << endl;
     return false;
 }
 

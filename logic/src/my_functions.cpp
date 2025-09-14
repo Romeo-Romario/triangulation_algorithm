@@ -72,23 +72,13 @@ bool check_edge(const std::vector<Triangle> &all_triangels,
 std::vector<Triangle> clean_triangulation_res(const std::vector<Triangle> &triangulation_res, const std::vector<int> &remove_indexes)
 {
     std::vector<Triangle> result = triangulation_res;
-    int index = 0;
-    for (const auto &t : result)
-    {
-        cout << "index: " << index << endl;
-        cout << t << endl;
-        index++;
-    }
 
-    // Make a copy and sort in descending order
     std::vector<int> sorted_remove_indexes = remove_indexes;
     std::sort(sorted_remove_indexes.rbegin(), sorted_remove_indexes.rend());
 
     for (int idx : sorted_remove_indexes)
     {
-        cout << "Delete with index: " << idx << endl;
         result.erase(result.begin() + idx);
-        cout << "Size of result now: " << result.size();
     }
     return result;
 }
@@ -145,7 +135,6 @@ std::vector<Triangle> triangulation(const std::vector<Point> &points)
             bad_triangles_indexes.push_back(index);
         }
     }
-    cout << "Bad triangles size: " << bad_triangles_indexes.size() << endl;
 
     triangulation_res = clean_triangulation_res(triangulation_full, bad_triangles_indexes);
     return triangulation_res;
