@@ -41,7 +41,9 @@ public:
     double area() const;
     double perimeter() const;
     bool isValid() const;
+    Point replace_diff_point(const Point &p);
     std::vector<Edge> get_edges() const;
+    std::vector<Point> get_points() const;
     bool contains_point(const Point &p) const;
     friend std::ostream &operator<<(std::ostream &os, const Triangle &p); // mainly for debug purposes
 };
@@ -58,3 +60,4 @@ public:
 
 double distance(const Point &p1, const Point &p2);
 bool check_if_point_inside_circle(const Point &p, const Circle &c);
+bool are_points_colinear(const Point &a, const Point &b, const Point &c);

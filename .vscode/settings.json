@@ -50,7 +50,8 @@
     "xtr1common": "cpp",
     "xutility": "cpp",
     "string": "cpp",
-    "algorithm": "cpp"
+    "algorithm": "cpp",
+    "optional": "cpp"
   },
   "C_Cpp.errorSquiggles": "disabled"
 }

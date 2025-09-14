@@ -139,3 +139,48 @@ std::vector<Triangle> triangulation(const std::vector<Point> &points)
     triangulation_res = clean_triangulation_res(triangulation_full, bad_triangles_indexes);
     return triangulation_res;
 }
+
+std::vector<Triangle> check_triangulation(const std::vector<Triangle> &traingulation)
+{
+    std::vector<Triangle> oper_triangulation = traingulation;
+    int repeat_count = 0;
+    // Go by index to make changes of triangles more simple
+    for (int external_index = 0; external_index < oper_triangulation.size(); external_index++)
+    {
+        Circle cir_circle = Circle::calculate_circumscribed_circle(oper_triangulation[external_index]);
+        cout << "Triangle for circle :" << oper_triangulation[external_index];
+        cout << "Circle " << cir_circle.center << " radius:" << cir_circle.radius << endl;
+        for (int internal_index = 0; internal_index < oper_triangulation.size(); internal_index++)
+        {
+            if (external_index == internal_index)
+            {
+                continue;
+            }
+
+            // TODO: for two or more points
+
+            for (const auto &point : oper_triangulation[internal_index].get_points())
+            {
+                // cout << "Cycle Point: " << point << endl;
+                // cout << "distance(cir_circle.center, point) < cir_circle.radius " << (distance(cir_circle.center, point) < cir_circle.radius) << endl
+                //      << endl;
+                // cout << "!oper_triangulation[external_index].contains_point(point) " << (!oper_triangulation[external_index].contains_point(point)) << endl
+                //      << endl;
+                if (distance(cir_circle.center, point) < cir_circle.radius &&
+                    !oper_triangulation[external_index].contains_point(point))
+                {
+                    cout << "In triangles " << oper_triangulation[external_index] << " --- " << oper_triangulation[internal_index] << endl
+                         << endl;
+                    Point temp = oper_triangulation[external_index].replace_diff_point(point);
+                    oper_triangulation[internal_index].replace_diff_point(temp);
+                    external_index--;
+                    cout << "Point : " << point << " was changed\n";
+                    cout << "In triangles " << oper_triangulation[external_index] << " --- " << oper_triangulation[internal_index] << endl
+                         << endl;
+                }
+            }
+        }
+    }
+
+    return oper_triangulation;
+}

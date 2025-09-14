@@ -13,9 +13,16 @@ using std::endl;
 using std::vector;
 int main()
 {
-    Triangle triangle = Triangle(Point(-11.661904, -10.0), Point(17.661904, -10.0), Point(3.0, 30.0));
+    Triangle t1(Point(0, 5), Point(0, -5), Point(1, 0));
+    Triangle t2(Point(0, 5), Point(0, -5), Point(-1, 0));
 
-    Circle circle = Circle::calculate_circumscribed_circle(triangle);
+    vector<Triangle> tt = {t1, t2};
 
-    cout << "Circle center: " << circle.center.x << " " << circle.center.y << " radius: " << circle.radius << endl;
+    vector<Triangle> result = check_triangulation(tt);
+
+    cout << "Result\n";
+    for (const auto &t : result)
+    {
+        cout << t;
+    }
 }

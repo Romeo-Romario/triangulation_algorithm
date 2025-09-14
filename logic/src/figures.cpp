@@ -4,6 +4,7 @@
 using std::cout;
 using std::endl;
 
+// Generall
 double distance(const Point &p1, const Point &p2)
 {
     return std::sqrt(std::pow((p2.x - p1.x), 2) + std::pow((p2.y - p1.y), 2));
@@ -21,7 +22,7 @@ bool operator==(const Edge &e1, const Edge &e2)
 
 std::ostream &operator<<(std::ostream &os, const Point &p)
 {
-    os << "(x: " << p.x << "; " << p.y << ")";
+    os << "(x: " << p.x << "; y:" << p.y << ")";
     return os;
 }
 
@@ -75,15 +76,47 @@ std::vector<Edge> Triangle::get_edges() const
     return {Edge(a, b), Edge(b, c), Edge(c, a)};
 }
 
+std::vector<Point> Triangle::get_points() const
+{
+    return {a, b, c};
+}
 bool Triangle::contains_point(const Point &p) const
 {
-    if (a == p || b == p || c == p)
-    {
-        return true;
-    }
-    return false;
+    return a == p || b == p || c == p;
 }
 
+Point Triangle::replace_diff_point(const Point &p)
+{
+    // TODO check this thing
+    Point res;
+    if (a != p)
+    {
+        res = a;
+        a = p;
+        cout << "a was changed \n";
+        cout << "from " << res << " to " << p << endl;
+    }
+    else if (b != p)
+    {
+        res = b;
+        b = p;
+        cout << "b was changed \n";
+        cout << "from " << res << " to " << p << endl;
+    }
+    else if (c != p)
+    {
+        res = c;
+        c = p;
+        cout << "c was changed \n";
+        cout << "from " << res << " to " << p << endl;
+    }
+    else
+    {
+        cout << "nothing was changed \n";
+    }
+    return res;
+}
+// Circle
 Circle Circle::calculate_circumscribed_circle(const Triangle &triangle)
 {
     // Now it's my time
@@ -98,13 +131,21 @@ Circle Circle::calculate_circumscribed_circle(const Triangle &triangle)
     double k_ab = (triangle.b.y - triangle.a.y) / (triangle.b.x - triangle.a.x);
     double k_bc = (triangle.c.y - triangle.b.y) / (triangle.c.x - triangle.b.x);
 
+    if ((triangle.b.x - triangle.a.x) == 0)
+    {
+        k_ab = 0;
+    }
+    if ((triangle.c.x - triangle.b.x) == 0)
+    {
+        k_bc = 0;
+    }
+
     // Find angle coefficients of perpendiculars m1 and m2
     double k_m1 = -1.0 / k_ab;
     double k_m2 = -1.0 / k_bc;
 
     if (k_ab == 0.0)
     {
-        ;
         x = mid_ab.x;
         y = k_m2 * (x - mid_bc.x) + mid_bc.y;
         center.x = x;

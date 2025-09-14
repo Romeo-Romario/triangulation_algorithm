@@ -24,22 +24,22 @@ y = [p.y for p in incoming_data]
 ax.scatter(x, y, color="blue", label="Input Points")
 
 # Add circle
-ax.add_patch(
-    C(
-        (circle.center.x, circle.center.y),
-        circle.radius,
-        edgecolor="red",
-        facecolor="none",
-    )
-)
+# ax.add_patch(
+#     C(
+#         (circle.center.x, circle.center.y),
+#         circle.radius,
+#         edgecolor="red",
+#         facecolor="none",
+#     )
+# )
 
 # Plot triangle vertices
-tx = [triangle.a.x, triangle.b.x, triangle.c.x, triangle.a.x]
-ty = [triangle.a.y, triangle.b.y, triangle.c.y, triangle.a.y]
-ax.plot(tx, ty, color="red", label="Start Triangle")
+# tx = [triangle.a.x, triangle.b.x, triangle.c.x, triangle.a.x]
+# ty = [triangle.a.y, triangle.b.y, triangle.c.y, triangle.a.y]
+# ax.plot(tx, ty, color="red", label="Start Triangle")
 
 
-colors = ["green", "orange", "purple"]
+colors = plt.cm.tab10(np.linspace(0, 1, len(triangulation_res)))
 for i, tri in enumerate(triangulation_res):
     # Extract triangle vertices
     tri_x = [tri.a.x, tri.b.x, tri.c.x, tri.a.x]
