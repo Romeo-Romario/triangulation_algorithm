@@ -9,7 +9,6 @@ ext_modules = [
         sources=[
             "bindings.cpp",
             os.path.join("src", "my_functions.cpp"),
-            os.path.join("src", "math_staff.cpp"),
             os.path.join("src", "figures.cpp"),
         ],
         include_dirs=[
