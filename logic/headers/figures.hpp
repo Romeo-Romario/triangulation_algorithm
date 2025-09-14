@@ -1,5 +1,6 @@
 #pragma once
 #include "math_staff.hpp"
+#include <iostream>
 #include <cmath> // For std::sqrt
 
 class Point
@@ -12,6 +13,7 @@ public:
     Point(const Point &el) : x{el.x}, y{el.y} {}
     Point(double x, double y) : x(x), y(y) {}
     friend bool operator==(const Point &p1, const Point &p2);
+    friend std::ostream &operator<<(std::ostream &os, const Point &p); // mainly for debug purposes
     ~Point() {}
 };
 
@@ -41,6 +43,7 @@ public:
     bool isValid() const;
     std::vector<Edge> get_edges() const;
     bool contains_point(const Point &p) const;
+    friend std::ostream &operator<<(std::ostream &os, const Triangle &p); // mainly for debug purposes
 };
 
 struct Circle

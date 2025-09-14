@@ -1,4 +1,5 @@
 #include "../headers/figures.hpp"
+#include <ostream>
 
 using std::cout;
 using std::endl;
@@ -16,6 +17,19 @@ bool operator==(const Point &p1, const Point &p2)
 bool operator==(const Edge &e1, const Edge &e2)
 {
     return (e1.a == e2.a && e1.b == e2.b) || (e1.a == e2.b && e1.b == e2.a);
+}
+
+std::ostream &operator<<(std::ostream &os, const Point &p)
+{
+    os << "(x: " << p.x << "; " << p.y << ")";
+    return os;
+}
+
+std::ostream &operator<<(std::ostream &os, const Triangle &p)
+{
+    os << "Triangle\n"
+       << "a: " << p.a << "b: " << p.b << " c: " << p.c << endl;
+    return os;
 }
 
 bool check_if_point_inside_circle(const Point &p, const Circle &c)
@@ -105,7 +119,6 @@ Circle Circle::calculate_circumscribed_circle(const Triangle &triangle)
     }
     else
     {
-        cout << "k_m1: " << k_m1 << " k_m2: " << k_m2 << endl;
         std::vector<std::vector<double>> matrix_A = {
             {-k_m1, 1.0},
             {-k_m2, 1.0}};

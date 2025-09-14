@@ -1,5 +1,8 @@
 #include "../headers/my_functions.hpp"
 
+using std::cout;
+using std::endl;
+
 Triangle initial_super_triangle(const std::vector<Point> &points)
 {
     Point top, left, right, bottom;
@@ -69,9 +72,13 @@ bool check_edge(const std::vector<Triangle> &all_triangels,
 std::vector<Triangle> clean_triangulation_res(const std::vector<Triangle> &triangulation_res, const std::vector<int> &remove_indexes)
 {
     std::vector<Triangle> result = triangulation_res;
-    for (int index = remove_indexes.size() - 1; index > -1; index--)
+
+    std::vector<int> sorted_remove_indexes = remove_indexes;
+    std::sort(sorted_remove_indexes.rbegin(), sorted_remove_indexes.rend());
+
+    for (int idx : sorted_remove_indexes)
     {
-        result.erase(result.begin() + index);
+        result.erase(result.begin() + idx);
     }
     return result;
 }
