@@ -21,9 +21,3 @@ from geometry import Point, get_start_triangle  # type: ignore
 # plt.gca().set_aspect("equal", adjustable="box")
 # plt.legend()
 # plt.show()
-
-
-matrix = np.array([[2, 3], [4, -1]], dtype=float)
-b = np.array([7, 9], dtype=float)
-
-print(np.linalg.solve(matrix, b))

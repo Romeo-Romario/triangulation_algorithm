@@ -5,7 +5,7 @@
 
 namespace py = pybind11;
 
-// Expose Point and Triangle to Python
+// Expose Entities and functions to python
 PYBIND11_MODULE(geometry, m)
 {
     py::class_<Point>(m, "Point")
@@ -27,6 +27,14 @@ PYBIND11_MODULE(geometry, m)
         .def("__repr__", [](const Triangle &t)
              { return "<Triangle area=" + std::to_string(t.area()) + ">"; });
 
-    m.def("get_start_triangle", &initial_super_triangle,
-          "Generate the starting triangle from a set of points");
+    py::class_<Circle>(m, "Circle")
+        .def(py::init<Point, double>())
+        .def_readwrite("center", &Circle::center)
+        .def_readwrite("radius", &Circle::radius)
+        .def("calculate_circumscribed_circle", &Circle::calculate_circumscribed_circle)
+        .def("__repr__", [](const Circle &c)
+             { return "<Circle center: x= " + std::to_string(c.center.x) + " y= " + std::to_string(c.center.y) + " radius= " + std::to_string(c.radius) + ">"; });
+
+    m.def("get_start_triangle", &initial_super_triangle, "Generate the starting triangle from a set of points");
+    m.def("triangulation", &triangulation, "Runs the triangulation algorithm");
 }

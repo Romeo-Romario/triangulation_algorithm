@@ -1,17 +1,24 @@
 from setuptools import setup, Extension
 from setuptools.command.build_ext import build_ext
 import pybind11
+import os
 
 ext_modules = [
     Extension(
         "geometry",  # module name
-        sources=["bindings.cpp"],  # your binding code
+        sources=[
+            "bindings.cpp",
+            os.path.join("src", "my_functions.cpp"),
+            os.path.join("src", "math_staff.cpp"),
+            os.path.join("src", "figures.cpp"),
+        ],
         include_dirs=[
             pybind11.get_include(),
-            "src/headers",  # location of figures.hpp, my_functions.hpp
+            "headers",  # location of figures.hpp, my_functions.hpp
+            "src",
         ],
         language="c++",
-        extra_compile_args=["-std=c++17"],  # or "/std:c++17" on MSVC
+        extra_compile_args=["/std:c++20"],  # MSVC
     )
 ]
 
