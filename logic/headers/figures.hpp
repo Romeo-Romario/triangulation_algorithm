@@ -60,4 +60,3 @@ public:
 
 double distance(const Point &p1, const Point &p2);
 bool check_if_point_inside_circle(const Point &p, const Circle &c);
-bool are_points_colinear(const Point &a, const Point &b, const Point &c);
