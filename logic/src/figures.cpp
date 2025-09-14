@@ -8,6 +8,26 @@ double distance(const Point &p1, const Point &p2)
     return std::sqrt(std::pow((p2.x - p1.x), 2) + std::pow((p2.y - p1.y), 2));
 }
 
+bool operator==(const Point &p1, const Point &p2)
+{
+    return p1.x == p2.x && p1.y == p2.y;
+}
+
+bool operator==(const Edge &e1, const Edge &e2)
+{
+    return (e1.a == e2.a && e1.b == e2.b) || (e1.a == e2.b && e1.b == e2.a);
+}
+
+bool check_if_point_inside_circle(const Point &p, const Circle &c)
+{
+    if (distance(p, c.center) <= c.radius)
+    {
+        return true;
+    }
+
+    return false;
+}
+
 double Edge::length() const
 {
     double dx = b.x - a.x;
@@ -34,6 +54,20 @@ double Triangle::perimeter() const
     Edge bc(b, c);
     Edge ca(c, a);
     return ab.length() + bc.length() + ca.length();
+}
+
+std::vector<Edge> Triangle::get_edges() const
+{
+    return {Edge(a, b), Edge(b, c), Edge(c, a)};
+}
+
+bool Triangle::contains_point(const Point &p) const
+{
+    if (a == p || b == p || c == p)
+    {
+        return true;
+    }
+    return false;
 }
 
 Circle Circle::calculate_circumscribed_circle(const Triangle &triangle)

@@ -43,21 +43,92 @@ Triangle initial_super_triangle(const std::vector<Point> &points)
     );
 }
 
+bool check_edge(const std::vector<Triangle> &all_triangels,
+                const int &current_edge_triangle_index,
+                const Edge &current_edge)
+{
+    for (int triangle_index = 0; triangle_index < all_triangels.size(); triangle_index++)
+    {
+        if (triangle_index == current_edge_triangle_index)
+        {
+            continue;
+        }
+
+        for (const auto &edge : all_triangels[triangle_index].get_edges())
+        {
+            if (edge == current_edge)
+            {
+                return false;
+            }
+        }
+    }
+
+    return true;
+}
+
+std::vector<Triangle> clean_triangulation_res(const std::vector<Triangle> &triangulation_res, const std::vector<int> &remove_indexes)
+{
+    std::vector<Triangle> result = triangulation_res;
+    for (int index = remove_indexes.size() - 1; index > -1; index--)
+    {
+        result.erase(result.begin() + index);
+    }
+    return result;
+}
+
 std::vector<Triangle> triangulation(const std::vector<Point> &points)
 {
     Triangle super_triangle = initial_super_triangle(points);
-
-    std::vector<Triangle> triangulation_res = {super_triangle};
-
+    std::vector<Triangle> triangulation_res;
+    std::vector<Triangle> triangulation_full = {super_triangle};
+    // 3.0
+    Circle circumscribed_circle;
     for (const auto &point : points)
     {
         std::vector<Triangle> bad_triangles = {};
 
-        for (const auto &triangle : triangulation_res)
+        // 3.1
+        for (const auto &triangle : triangulation_full)
         {
-            // if ()
-            continue;
+            circumscribed_circle = Circle::calculate_circumscribed_circle(triangle);
+            if (check_if_point_inside_circle(point, circumscribed_circle))
+            {
+                bad_triangles.push_back(triangle);
+            }
+        }
+
+        // 3.2
+        std::vector<Edge> polygon = {};
+        for (int triangle_index = 0; triangle_index < bad_triangles.size(); triangle_index++)
+        {
+            for (const auto &edge : bad_triangles[triangle_index].get_edges())
+            {
+                if (check_edge(bad_triangles, triangle_index, edge))
+                {
+                    polygon.push_back(edge);
+                }
+            }
+        }
+
+        // 3.3
+        for (const auto &edge : polygon)
+        {
+            Triangle new_triangle(edge.a, edge.b, point);
+            triangulation_full.push_back(new_triangle);
         }
     }
-    return {};
+
+    std::vector<int> bad_triangles_indexes = {};
+    for (int index = 0; index < triangulation_full.size(); index++)
+    {
+        if (triangulation_full[index].contains_point(super_triangle.a) ||
+            triangulation_full[index].contains_point(super_triangle.b) ||
+            triangulation_full[index].contains_point(super_triangle.c))
+        {
+            bad_triangles_indexes.push_back(index);
+        }
+    }
+
+    triangulation_res = clean_triangulation_res(triangulation_full, bad_triangles_indexes);
+    return triangulation_res;
 }

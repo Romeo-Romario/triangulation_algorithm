@@ -11,11 +11,9 @@ public:
     Point() : x(0.0), y(0.0) {}
     Point(const Point &el) : x{el.x}, y{el.y} {}
     Point(double x, double y) : x(x), y(y) {}
-
+    friend bool operator==(const Point &p1, const Point &p2);
     ~Point() {}
 };
-
-double distance(const Point &p1, const Point &p2);
 
 class Edge
 {
@@ -26,7 +24,7 @@ public:
     Edge() : a(), b() {}
     Edge(const Point &p1, const Point &p2) : a(p1), b(p2) {}
     Edge(const Edge &e) : a(e.a), b(e.b) {}
-
+    friend bool operator==(const Edge &e1, const Edge &e2);
     ~Edge() {}
 
     double length() const;
@@ -41,6 +39,8 @@ public:
     double area() const;
     double perimeter() const;
     bool isValid() const;
+    std::vector<Edge> get_edges() const;
+    bool contains_point(const Point &p) const;
 };
 
 struct Circle
@@ -52,3 +52,6 @@ public:
     Circle(const Point &c, double r) : center(c), radius(r) {}
     static Circle calculate_circumscribed_circle(const Triangle &triangle);
 };
+
+double distance(const Point &p1, const Point &p2);
+bool check_if_point_inside_circle(const Point &p, const Circle &c);
