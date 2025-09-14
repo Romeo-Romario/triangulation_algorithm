@@ -1,6 +1,6 @@
 #pragma once
-#include "math_staff.hpp"
 #include <iostream>
+#include <vector>
 #include <cmath> // For std::sqrt
 
 class Point

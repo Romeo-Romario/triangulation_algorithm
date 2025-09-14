@@ -2,7 +2,6 @@
 #include <vector>
 #include <utility>
 #include "headers/figures.hpp"
-#include "headers/math_staff.hpp"
 #include "headers/my_functions.hpp"
 
 /*

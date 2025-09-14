@@ -86,52 +86,32 @@ bool Triangle::contains_point(const Point &p) const
 
 Circle Circle::calculate_circumscribed_circle(const Triangle &triangle)
 {
-    // Now it's my time
-    double x, y;
-    Point center;
-    // Find middle points
-    Point mid_ab = Point((triangle.a.x + triangle.b.x) / 2.0, (triangle.a.y + triangle.b.y) / 2.0);
-    Point mid_bc = Point((triangle.b.x + triangle.c.x) / 2.0, (triangle.b.y + triangle.c.y) / 2.0);
+    double x1 = triangle.a.x, y1 = triangle.a.y;
+    double x2 = triangle.b.x, y2 = triangle.b.y;
+    double x3 = triangle.c.x, y3 = triangle.c.y;
 
-    // Find angle coefficients
+    double d = 2 * (x1 * (y2 - y3) +
+                    x2 * (y3 - y1) +
+                    x3 * (y1 - y2));
 
-    double k_ab = (triangle.b.y - triangle.a.y) / (triangle.b.x - triangle.a.x);
-    double k_bc = (triangle.c.y - triangle.b.y) / (triangle.c.x - triangle.b.x);
-
-    // Find angle coefficients of perpendiculars m1 and m2
-    double k_m1 = -1.0 / k_ab;
-    double k_m2 = -1.0 / k_bc;
-
-    if (k_ab == 0.0)
+    if (fabs(d) < 1e-12)
     {
-        ;
-        x = mid_ab.x;
-        y = k_m2 * (x - mid_bc.x) + mid_bc.y;
-        center.x = x;
-        center.y = y;
-    }
-    else if (k_bc == 0.0)
-    {
-        x = mid_bc.x;
-        y = k_m1 * (x - mid_ab.x) + mid_ab.y;
-        center.x = x;
-        center.y = y;
-    }
-    else
-    {
-        std::vector<std::vector<double>> matrix_A = {
-            {-k_m1, 1.0},
-            {-k_m2, 1.0}};
-
-        std::vector<double> b = {
-            mid_ab.y - k_m1 * mid_ab.x,
-            mid_bc.y - k_m2 * mid_bc.x};
-
-        auto result = solve_2_x_2_matrix(matrix_A, b);
-        center.x = result.first;
-        center.y = result.second;
+        // Degenerate triangle (points are collinear) → no unique circle
+        return Circle(Point(0, 0), -1);
     }
 
+    double ux = ((x1 * x1 + y1 * y1) * (y2 - y3) +
+                 (x2 * x2 + y2 * y2) * (y3 - y1) +
+                 (x3 * x3 + y3 * y3) * (y1 - y2)) /
+                d;
+
+    double uy = ((x1 * x1 + y1 * y1) * (x3 - x2) +
+                 (x2 * x2 + y2 * y2) * (x1 - x3) +
+                 (x3 * x3 + y3 * y3) * (x2 - x1)) /
+                d;
+
+    Point center(ux, uy);
     double radius = distance(center, triangle.a);
+
     return Circle(center, radius);
 }
