@@ -1,5 +1,6 @@
 #include "../headers/figures.hpp"
 #include <ostream>
+#include <cmath>
 
 using std::cout;
 using std::endl;
@@ -19,10 +20,12 @@ void rotate_edge(Triangle &t1, Triangle &t2)
     {
         if (t1.contains_point(point))
         {
+            cout << point << " was added to common points" << endl;
             common_points.push_back(point);
         }
         else
         {
+            cout << point << " was added to diff points" << endl;
             diff_points.push_back(point);
         }
     }
@@ -37,8 +40,9 @@ void rotate_edge(Triangle &t1, Triangle &t2)
 
     for (const auto &point : t1.get_points())
     {
-        if (!t1.contains_point(point))
+        if (!t2.contains_point(point))
         {
+            cout << point << " was added to diff points" << endl;
             diff_points.push_back(point);
         }
     }
