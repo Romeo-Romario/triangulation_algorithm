@@ -42,6 +42,7 @@ public:
     double perimeter() const;
     bool isValid() const;
     std::vector<Edge> get_edges() const;
+    std::vector<Point> get_points() const;
     bool contains_point(const Point &p) const;
     friend std::ostream &operator<<(std::ostream &os, const Triangle &p); // mainly for debug purposes
 };
@@ -58,3 +59,4 @@ public:
 
 double distance(const Point &p1, const Point &p2);
 bool check_if_point_inside_circle(const Point &p, const Circle &c);
+void rotate_edge(Triangle &t1, Triangle &t2);

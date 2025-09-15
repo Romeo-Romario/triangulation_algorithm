@@ -1,13 +1,59 @@
 #include "../headers/figures.hpp"
 #include <ostream>
+#include <cmath>
 
 using std::cout;
 using std::endl;
 
+//============================================
+// Generall
 double distance(const Point &p1, const Point &p2)
 {
     return std::sqrt(std::pow((p2.x - p1.x), 2) + std::pow((p2.y - p1.y), 2));
 }
+
+void rotate_edge(Triangle &t1, Triangle &t2)
+{
+    std::vector<Point> common_points = {};
+    std::vector<Point> diff_points = {};
+    for (const auto &point : t2.get_points())
+    {
+        if (t1.contains_point(point))
+        {
+            common_points.push_back(point);
+        }
+        else
+        {
+            diff_points.push_back(point);
+        }
+    }
+
+    if (common_points.size() < 2)
+    {
+        cout << "Triangles:\n"
+             << t1 << "and:\n"
+             << t2 << "have only one or less common point" << endl;
+        return;
+    }
+
+    for (const auto &point : t1.get_points())
+    {
+        if (!t2.contains_point(point))
+        {
+            diff_points.push_back(point);
+        }
+    }
+
+    cout << "t1 was changed from: " << t1;
+    t1 = Triangle(diff_points[0], diff_points[1], common_points[0]);
+    cout << "to: " << t1;
+
+    cout << "t2 was changed from: " << t2;
+    t2 = Triangle(diff_points[0], diff_points[1], common_points[1]);
+    cout << "to: " << t2;
+}
+
+//============================================
 
 bool operator==(const Point &p1, const Point &p2)
 {
@@ -21,14 +67,14 @@ bool operator==(const Edge &e1, const Edge &e2)
 
 std::ostream &operator<<(std::ostream &os, const Point &p)
 {
-    os << "(x: " << p.x << "; " << p.y << ")";
+    os << "(x: " << p.x << "; y:" << p.y << ")";
     return os;
 }
 
 std::ostream &operator<<(std::ostream &os, const Triangle &p)
 {
-    os << "Triangle\n"
-       << "a: " << p.a << "b: " << p.b << " c: " << p.c << endl;
+    os << "Triangle: "
+       << "(a: " << p.a << " b: " << p.b << " c: " << p.c << ")" << endl;
     return os;
 }
 
@@ -42,6 +88,7 @@ bool check_if_point_inside_circle(const Point &p, const Circle &c)
     return false;
 }
 
+// Edge
 double Edge::length() const
 {
     double dx = b.x - a.x;
@@ -75,15 +122,16 @@ std::vector<Edge> Triangle::get_edges() const
     return {Edge(a, b), Edge(b, c), Edge(c, a)};
 }
 
+std::vector<Point> Triangle::get_points() const
+{
+    return {a, b, c};
+}
 bool Triangle::contains_point(const Point &p) const
 {
-    if (a == p || b == p || c == p)
-    {
-        return true;
-    }
-    return false;
+    return a == p || b == p || c == p;
 }
 
+// Circle
 Circle Circle::calculate_circumscribed_circle(const Triangle &triangle)
 {
     double x1 = triangle.a.x, y1 = triangle.a.y;
