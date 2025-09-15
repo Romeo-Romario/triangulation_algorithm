@@ -41,7 +41,6 @@ public:
     double area() const;
     double perimeter() const;
     bool isValid() const;
-    Point replace_diff_point(const Point &p);
     std::vector<Edge> get_edges() const;
     std::vector<Point> get_points() const;
     bool contains_point(const Point &p) const;
@@ -60,3 +59,4 @@ public:
 
 double distance(const Point &p1, const Point &p2);
 bool check_if_point_inside_circle(const Point &p, const Circle &c);
+void rotate_edge(Triangle &t1, Triangle &t2);

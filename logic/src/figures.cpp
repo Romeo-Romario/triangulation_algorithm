@@ -4,11 +4,55 @@
 using std::cout;
 using std::endl;
 
+//============================================
 // Generall
 double distance(const Point &p1, const Point &p2)
 {
     return std::sqrt(std::pow((p2.x - p1.x), 2) + std::pow((p2.y - p1.y), 2));
 }
+
+void rotate_edge(Triangle &t1, Triangle &t2)
+{
+    std::vector<Point> common_points = {};
+    std::vector<Point> diff_points = {};
+    for (const auto &point : t2.get_points())
+    {
+        if (t1.contains_point(point))
+        {
+            common_points.push_back(point);
+        }
+        else
+        {
+            diff_points.push_back(point);
+        }
+    }
+
+    if (common_points.size() < 2)
+    {
+        cout << "Triangles:\n"
+             << t1 << "and:\n"
+             << t2 << "have only one or less common point" << endl;
+        return;
+    }
+
+    for (const auto &point : t1.get_points())
+    {
+        if (!t1.contains_point(point))
+        {
+            diff_points.push_back(point);
+        }
+    }
+
+    cout << "t1 was changed from: " << t1;
+    t1 = Triangle(diff_points[0], diff_points[1], common_points[0]);
+    cout << "to: " << t1;
+
+    cout << "t2 was changed from: " << t2;
+    t2 = Triangle(diff_points[0], diff_points[1], common_points[1]);
+    cout << "to: " << t2;
+}
+
+//============================================
 
 bool operator==(const Point &p1, const Point &p2)
 {
@@ -28,8 +72,8 @@ std::ostream &operator<<(std::ostream &os, const Point &p)
 
 std::ostream &operator<<(std::ostream &os, const Triangle &p)
 {
-    os << "Triangle\n"
-       << "a: " << p.a << "b: " << p.b << " c: " << p.c << endl;
+    os << "Triangle: "
+       << "(a: " << p.a << " b: " << p.b << " c: " << p.c << ")" << endl;
     return os;
 }
 
@@ -43,6 +87,7 @@ bool check_if_point_inside_circle(const Point &p, const Circle &c)
     return false;
 }
 
+// Edge
 double Edge::length() const
 {
     double dx = b.x - a.x;
@@ -85,37 +130,6 @@ bool Triangle::contains_point(const Point &p) const
     return a == p || b == p || c == p;
 }
 
-Point Triangle::replace_diff_point(const Point &p)
-{
-    // TODO check this thing
-    Point res;
-    if (a != p)
-    {
-        res = a;
-        a = p;
-        cout << "a was changed \n";
-        cout << "from " << res << " to " << p << endl;
-    }
-    else if (b != p)
-    {
-        res = b;
-        b = p;
-        cout << "b was changed \n";
-        cout << "from " << res << " to " << p << endl;
-    }
-    else if (c != p)
-    {
-        res = c;
-        c = p;
-        cout << "c was changed \n";
-        cout << "from " << res << " to " << p << endl;
-    }
-    else
-    {
-        cout << "nothing was changed \n";
-    }
-    return res;
-}
 // Circle
 Circle Circle::calculate_circumscribed_circle(const Triangle &triangle)
 {

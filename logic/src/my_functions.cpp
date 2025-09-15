@@ -171,12 +171,14 @@ std::vector<Triangle> check_triangulation(const std::vector<Triangle> &traingula
                 {
                     cout << "In triangles " << oper_triangulation[external_index] << " --- " << oper_triangulation[internal_index] << endl
                          << endl;
-                    Point temp = oper_triangulation[external_index].replace_diff_point(point);
-                    oper_triangulation[internal_index].replace_diff_point(temp);
+                    // Point temp = oper_triangulation[external_index].replace_diff_point(point);
+                    // oper_triangulation[internal_index].replace_diff_point(temp);
                     external_index--;
                     cout << "Point : " << point << " was changed\n";
                     cout << "In triangles " << oper_triangulation[external_index] << " --- " << oper_triangulation[internal_index] << endl
                          << endl;
+
+                    rotate_edge(oper_triangulation[external_index], oper_triangulation[internal_index]);
                 }
             }
         }
