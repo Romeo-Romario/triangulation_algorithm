@@ -98,6 +98,7 @@ std::vector<Triangle> generate_triangles(const std::vector<Point> &points)
         for (const auto &triangle : triangulation_full)
         {
             circumscribed_circle = Circle::calculate_circumscribed_circle(triangle);
+            // triangle.is_point_in_circle(point);
             if (check_if_point_inside_circle(point, circumscribed_circle))
             {
                 bad_triangles.push_back(triangle);
@@ -116,6 +117,14 @@ std::vector<Triangle> generate_triangles(const std::vector<Point> &points)
                 }
             }
         }
+
+        triangulation_full.erase(
+            std::remove_if(triangulation_full.begin(), triangulation_full.end(),
+                           [&](const Triangle &t)
+                           {
+                               return std::find(bad_triangles.begin(), bad_triangles.end(), t) != bad_triangles.end();
+                           }),
+            triangulation_full.end());
 
         // 3.3
         for (const auto &edge : polygon)
@@ -187,12 +196,12 @@ std::vector<Triangle> triangulation(const std::vector<Point> &points)
         cout << triangle;
     }
 
-    std::vector<Triangle> post_check_triangulation = check_triangulation(initial_triangulation);
-    cout << "Triangles after rotating edges: \n";
-    for (const auto &triangle : post_check_triangulation)
-    {
-        cout << triangle;
-    }
+    // std::vector<Triangle> post_check_triangulation = check_triangulation(initial_triangulation);
+    // cout << "Triangles after rotating edges: \n";
+    // for (const auto &triangle : post_check_triangulation)
+    // {
+    //     cout << triangle;
+    // }
 
-    return post_check_triangulation;
+    return initial_triangulation;
 }
