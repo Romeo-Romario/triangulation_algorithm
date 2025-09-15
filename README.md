@@ -2,7 +2,4 @@ This repository contains my implementation of trangulation algorithm using c++ a
 
 **Result so far**
 
-
-<img width="599" height="580" alt="image" src="https://github.com/user-attachments/assets/1b7d89d1-56b6-4305-9dd8-257bcc5a589e" />
-<img width="573" height="583" alt="image" src="https://github.com/user-attachments/assets/3a7a50cd-e5af-4215-9507-2e8f192a5220" />
-
+<img width="554" height="539" alt="image" src="https://github.com/user-attachments/assets/f90b4fcc-2ea1-4da3-b12e-d90deb98eb42" />
