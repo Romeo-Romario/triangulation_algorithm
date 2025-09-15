@@ -4,7 +4,7 @@ import numpy as np
 from geometry import Point, Circle, get_start_triangle, triangulation
 
 # Input points
-incoming_data = [Point(0, 0), Point(0, 10), Point(6, 10), Point(6, 0)]
+incoming_data = [Point(0, 0), Point(0, 10), Point(3, 5), Point(6, 10), Point(6, 0)]
 
 # Get big triangle
 triangle = get_start_triangle(incoming_data)

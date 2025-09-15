@@ -36,5 +36,5 @@ PYBIND11_MODULE(geometry, m)
              { return "<Circle center: x= " + std::to_string(c.center.x) + " y= " + std::to_string(c.center.y) + " radius= " + std::to_string(c.radius) + ">"; });
 
     m.def("get_start_triangle", &initial_super_triangle, "Generate the starting triangle from a set of points");
-    m.def("triangulation", &triangulation, "Runs the triangulation algorithm");
+    m.def("triangulation", &triangulation, "Runs the generate_triangles algorithm");
 }
