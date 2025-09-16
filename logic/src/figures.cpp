@@ -107,6 +107,61 @@ std::vector<Edge> points_to_sorted_edges(const std::vector<Point> &points)
     result.push_back(Edge(current_point, points[0]));
     return result;
 }
+
+int orientation(const Point &p, const Point &q, const Point &r)
+{
+    double val = (q.y - p.y) * (r.x - q.x) -
+                 (q.x - p.x) * (r.y - q.y);
+
+    if (val == 0.0)
+        return 0;
+    return (val > 0.0) ? 1 : 2;
+}
+
+// check if point q lies on segment pr
+bool onSegment(const Point &p, const Point &q, const Point &r)
+{
+    return (q.x <= std::max(p.x, r.x) && q.x >= std::min(p.x, r.x) &&
+            q.y <= std::max(p.y, r.y) && q.y >= std::min(p.y, r.y));
+}
+
+// main intersection check
+bool intersects(const Edge &e1, const Edge &e2)
+{
+    Point p1 = e1.a, q1 = e1.b;
+    Point p2 = e2.a, q2 = e2.b;
+
+    int o1 = orientation(p1, q1, p2);
+    int o2 = orientation(p1, q1, q2);
+    int o3 = orientation(p2, q2, p1);
+    int o4 = orientation(p2, q2, q1);
+
+    // General case
+    if (o1 != o2 && o3 != o4)
+        return true;
+
+    // Special cases (collinear + overlap)
+    if (o1 == 0 && onSegment(p1, p2, q1))
+        return true;
+    if (o2 == 0 && onSegment(p1, q2, q1))
+        return true;
+    if (o3 == 0 && onSegment(p2, p1, q2))
+        return true;
+    if (o4 == 0 && onSegment(p2, q1, q2))
+        return true;
+
+    return false;
+}
+
+std::vector<Edge> edges_to_point(const Point &target_point, const std::vector<Point> &points)
+{
+    std::vector<Edge> result = {};
+    for (const auto &point : points)
+    {
+        result.push_back(Edge(target_point, point));
+    }
+    return result;
+}
 //============================================
 
 bool operator==(const Point &p1, const Point &p2)

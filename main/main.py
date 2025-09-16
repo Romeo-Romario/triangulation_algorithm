@@ -48,7 +48,7 @@ plt.scatter(
     [p.y for p in incoming_data],
     color="red",
     s=100,
-    label="Вхідні точки",
+    label="Starting points",
     zorder=5,
 )
 
@@ -58,7 +58,7 @@ plt.scatter(
     [p.y for p in additinal_vertexes],
     color="blue",
     s=50,
-    label="Додаткові точки",
+    label="Added points",
     alpha=0.6,
 )
 

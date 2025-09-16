@@ -107,7 +107,7 @@ std::vector<Point> insert_grid(const std::vector<Point> &starting_points, const 
     cout << left_top << " " << left_bottom << " " << right_top << " " << right_bottom << endl;
 
     // Build grid
-    std::vector<Point> result_points = {};
+    std::vector<Point> full_grid_points = {};
 
     double horizontal_step = distance(left_bottom, right_bottom) / density;
     double vertical_step = distance(left_top, left_bottom) / density;
@@ -116,14 +116,48 @@ std::vector<Point> insert_grid(const std::vector<Point> &starting_points, const 
     {
         for (double vertical_value = bottom_egde; vertical_value <= top_edge; vertical_value += vertical_step)
         {
-            result_points.push_back(Point(horizontal_value, vertical_value));
+            full_grid_points.push_back(Point(horizontal_value, vertical_value));
         }
     }
 
     // Part 2 : Remove points that are outside boundaries
 
     // 2.1
+    bool should_add_point{true};
     std::vector<Edge> boundaries = points_to_sorted_edges(starting_points);
+    for (const auto &edge : boundaries)
+    {
+        cout << "Boundary edge: " << edge.a << " " << edge.b << endl;
+    }
+    std::vector<Point> result_points = {};
+    for (const auto &point : full_grid_points)
+    {
+        for (const auto &border_edge : boundaries)
+        {
+            if (onSegment(border_edge.a, point, border_edge.b))
+            {
+                break;
+            }
+            for (const auto &current_point_edge : edges_to_point(point, starting_points))
+            {
+                if (intersects(border_edge, current_point_edge))
+                {
+                    should_add_point = false;
+                    break;
+                }
+            }
+        }
+        if (should_add_point)
+        {
+            result_points.push_back(point);
+        }
+        should_add_point = true;
+    }
+
+    for (auto &point : result_points)
+    {
+        cout << point << endl;
+    }
     return result_points;
 }
 
