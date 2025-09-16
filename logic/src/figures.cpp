@@ -57,7 +57,8 @@ void rotate_edge(Triangle &t1, Triangle &t2)
 
 bool operator==(const Point &p1, const Point &p2)
 {
-    return p1.x == p2.x && p1.y == p2.y;
+    const double EPS = 1e-9;
+    return fabs(p1.x - p2.x) < EPS && fabs(p1.y - p2.y) < EPS;
 }
 
 bool operator==(const Edge &e1, const Edge &e2)
@@ -94,6 +95,19 @@ double Edge::length() const
     double dx = b.x - a.x;
     double dy = b.y - a.y;
     return std::sqrt(dx * dx + dy * dy);
+}
+
+// Triangle
+
+bool operator==(const Triangle &t1, const Triangle &t2)
+{
+    std::vector<Point> p1 = {t1.a, t1.b, t1.c};
+    std::vector<Point> p2 = {t2.a, t2.b, t2.c};
+    std::sort(p1.begin(), p1.end(), [](const Point &a, const Point &b)
+              { return a.x < b.x || (a.x == b.x && a.y < b.y); });
+    std::sort(p2.begin(), p2.end(), [](const Point &a, const Point &b)
+              { return a.x < b.x || (a.x == b.x && a.y < b.y); });
+    return p1 == p2;
 }
 
 double Triangle::area() const

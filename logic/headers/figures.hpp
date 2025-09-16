@@ -2,6 +2,7 @@
 #include <iostream>
 #include <vector>
 #include <cmath> // For std::sqrt
+#include <algorithm>
 
 class Point
 {
@@ -44,6 +45,7 @@ public:
     std::vector<Edge> get_edges() const;
     std::vector<Point> get_points() const;
     bool contains_point(const Point &p) const;
+    friend bool operator==(const Triangle &t1, const Triangle &t2);
     friend std::ostream &operator<<(std::ostream &os, const Triangle &p); // mainly for debug purposes
 };
 
@@ -60,3 +62,5 @@ public:
 double distance(const Point &p1, const Point &p2);
 bool check_if_point_inside_circle(const Point &p, const Circle &c);
 void rotate_edge(Triangle &t1, Triangle &t2);
+Point compute_centroid(const std::vector<Point> &points);
+void sort_points_clockwise(std::vector<Point> &points);
