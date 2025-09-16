@@ -55,6 +55,35 @@ void rotate_edge(Triangle &t1, Triangle &t2)
 
 //============================================
 
+Point compute_centroid(const std::vector<Point> &points)
+{
+    double cx = 0.0, cy = 0.0;
+    for (const auto &p : points)
+    {
+        cx += p.x;
+        cy += p.y;
+    }
+    cx /= points.size();
+    cy /= points.size();
+    return Point(cx, cy);
+}
+
+void sort_points_clockwise(std::vector<Point> &points)
+{
+    if (points.size() < 2)
+        return;
+
+    Point center = compute_centroid(points);
+
+    std::sort(points.begin(), points.end(),
+              [&center](const Point &a, const Point &b)
+              {
+                  double angleA = atan2(a.y - center.y, a.x - center.x);
+                  double angleB = atan2(b.y - center.y, b.x - center.x);
+                  return angleA > angleB;
+              });
+}
+
 bool operator==(const Point &p1, const Point &p2)
 {
     return p1.x == p2.x && p1.y == p2.y;
@@ -63,6 +92,17 @@ bool operator==(const Point &p1, const Point &p2)
 bool operator==(const Edge &e1, const Edge &e2)
 {
     return (e1.a == e2.a && e1.b == e2.b) || (e1.a == e2.b && e1.b == e2.a);
+}
+
+bool operator==(const Triangle &t1, const Triangle &t2)
+{
+    std::vector<Point> p1 = {t1.a, t1.b, t1.c};
+    std::vector<Point> p2 = {t2.a, t2.b, t2.c};
+    std::sort(p1.begin(), p1.end(), [](const Point &a, const Point &b)
+              { return a.x < b.x || (a.x == b.x && a.y < b.y); });
+    std::sort(p2.begin(), p2.end(), [](const Point &a, const Point &b)
+              { return a.x < b.x || (a.x == b.x && a.y < b.y); });
+    return p1 == p2;
 }
 
 std::ostream &operator<<(std::ostream &os, const Point &p)
@@ -129,6 +169,41 @@ std::vector<Point> Triangle::get_points() const
 bool Triangle::contains_point(const Point &p) const
 {
     return a == p || b == p || c == p;
+}
+
+bool Triangle::is_point_in_circle(const Point &p) const
+{
+    // Беремо вершини як є
+    const Point &p1 = a;
+    const Point &p2 = b;
+    const Point &p3 = c;
+
+    double _11 = p1.x - p.x;
+    double _12 = p1.y - p.y;
+    double _13 = _11 * _11 + _12 * _12;
+
+    double _21 = p2.x - p.x;
+    double _22 = p2.y - p.y;
+    double _23 = _21 * _21 + _22 * _22;
+
+    double _31 = p3.x - p.x;
+    double _32 = p3.y - p.y;
+    double _33 = _31 * _31 + _32 * _32;
+
+    double det = _11 * (_22 * _33 - _23 * _32) - _12 * (_21 * _33 - _23 * _31) + _13 * (_21 * _32 - _22 * _31);
+
+    // Визначаємо орієнтацію трикутника
+    double orientation = (p2.x - p1.x) * (p3.y - p1.y) - (p2.y - p1.y) * (p3.x - p1.x);
+
+    const double EPS = 1e-12;
+    if (orientation > 0)
+    {
+        return det > EPS;
+    }
+    else
+    {
+        return det < -EPS;
+    }
 }
 
 // Circle
