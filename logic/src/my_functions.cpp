@@ -98,7 +98,6 @@ std::vector<Triangle> generate_triangles(const std::vector<Point> &points)
         for (const auto &triangle : triangulation_full)
         {
             circumscribed_circle = Circle::calculate_circumscribed_circle(triangle);
-            // triangle.is_point_in_circle(point);
             if (check_if_point_inside_circle(point, circumscribed_circle))
             {
                 bad_triangles.push_back(triangle);
@@ -153,7 +152,6 @@ std::vector<Triangle> check_triangulation(const std::vector<Triangle> &traingula
 {
     std::vector<Triangle> oper_triangulation = traingulation;
     int repeat_count = 0;
-    // Go by index to make changes of triangles more simple
     for (int external_index = 0; external_index < oper_triangulation.size(); external_index++)
     {
         Circle cir_circle = Circle::calculate_circumscribed_circle(oper_triangulation[external_index]);
@@ -172,16 +170,9 @@ std::vector<Triangle> check_triangulation(const std::vector<Triangle> &traingula
                     !oper_triangulation[external_index].contains_point(point))
                 {
                     rotate_edge(oper_triangulation[external_index], oper_triangulation[internal_index]);
-                    // repeat_count += 1;
                 }
-
-                // if (repeat_count > 100){
-                //     cout << "Cycle of edge rotating" << endl;
-                //     break;
-                // }
             }
         }
-        // repeat_count = 0;
     }
 
     return oper_triangulation;
