@@ -89,7 +89,6 @@ std::vector<Triangle> generate_triangles(const std::vector<Point> &points)
     std::vector<Triangle> triangulation_res;
     std::vector<Triangle> triangulation_full = {super_triangle};
     // 3.0
-    Circle circumscribed_circle;
     for (const auto &point : points)
     {
         std::vector<Triangle> bad_triangles = {};
@@ -97,8 +96,7 @@ std::vector<Triangle> generate_triangles(const std::vector<Point> &points)
         // 3.1
         for (const auto &triangle : triangulation_full)
         {
-            circumscribed_circle = Circle::calculate_circumscribed_circle(triangle);
-            if (check_if_point_inside_circle(point, circumscribed_circle))
+            if (triangle.is_point_in_circle(point))
             {
                 bad_triangles.push_back(triangle);
             }

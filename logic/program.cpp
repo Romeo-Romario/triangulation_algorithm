@@ -12,16 +12,10 @@ using std::endl;
 using std::vector;
 int main()
 {
-    Triangle t1(Point(0, 5), Point(0, -5), Point(1, 0));
-    Triangle t2(Point(0, 5), Point(0, -5), Point(-1, 0));
+    Triangle t(Point(0, 0), Point(0, 2), Point(2, 0));
+    Point p1(1.5, 2.0);
+    Point p2(1.5, -1);
 
-    vector<Triangle> tt = {t1, t2};
-
-    vector<Triangle> result = check_triangulation(tt);
-
-    cout << "Result\n";
-    for (const auto &t : result)
-    {
-        cout << t;
-    }
+    cout << t << " " << p1 << " " << t.is_point_in_circle(p1) << endl;
+    cout << t << " " << p2 << " " << t.is_point_in_circle(p2);
 }
