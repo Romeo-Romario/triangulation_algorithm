@@ -145,7 +145,6 @@ std::vector<Triangle> check_triangulation(const std::vector<Triangle> &traingula
     // Go by index to make changes of triangles more simple
     for (int external_index = 0; external_index < oper_triangulation.size(); external_index++)
     {
-        Circle cir_circle = Circle::calculate_circumscribed_circle(oper_triangulation[external_index]);
         for (int internal_index = 0; internal_index < oper_triangulation.size(); internal_index++)
         {
             if (external_index == internal_index)

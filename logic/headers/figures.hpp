@@ -50,16 +50,5 @@ public:
     friend std::ostream &operator<<(std::ostream &os, const Triangle &p); // mainly for debug purposes
 };
 
-struct Circle
-{
-public:
-    Point center;
-    double radius;
-    Circle() : center(), radius(0.0) {} // <-- Default constructor needed!
-    Circle(const Point &c, double r) : center(c), radius(r) {}
-    static Circle calculate_circumscribed_circle(const Triangle &triangle);
-};
-
 double distance(const Point &p1, const Point &p2);
-bool check_if_point_inside_circle(const Point &p, const Circle &c);
 void rotate_edge(Triangle &t1, Triangle &t2);

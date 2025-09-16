@@ -118,16 +118,6 @@ std::ostream &operator<<(std::ostream &os, const Triangle &p)
     return os;
 }
 
-bool check_if_point_inside_circle(const Point &p, const Circle &c)
-{
-    if (distance(p, c.center) <= c.radius)
-    {
-        return true;
-    }
-
-    return false;
-}
-
 // Edge
 double Edge::length() const
 {
@@ -204,37 +194,4 @@ bool Triangle::is_point_in_circle(const Point &p) const
     {
         return det < -EPS;
     }
-}
-
-// Circle
-Circle Circle::calculate_circumscribed_circle(const Triangle &triangle)
-{
-    double x1 = triangle.a.x, y1 = triangle.a.y;
-    double x2 = triangle.b.x, y2 = triangle.b.y;
-    double x3 = triangle.c.x, y3 = triangle.c.y;
-
-    double d = 2 * (x1 * (y2 - y3) +
-                    x2 * (y3 - y1) +
-                    x3 * (y1 - y2));
-
-    if (fabs(d) < 1e-12)
-    {
-        // Degenerate triangle (points are collinear) → no unique circle
-        return Circle(Point(0, 0), -1);
-    }
-
-    double ux = ((x1 * x1 + y1 * y1) * (y2 - y3) +
-                 (x2 * x2 + y2 * y2) * (y3 - y1) +
-                 (x3 * x3 + y3 * y3) * (y1 - y2)) /
-                d;
-
-    double uy = ((x1 * x1 + y1 * y1) * (x3 - x2) +
-                 (x2 * x2 + y2 * y2) * (x1 - x3) +
-                 (x3 * x3 + y3 * y3) * (x2 - x1)) /
-                d;
-
-    Point center(ux, uy);
-    double radius = distance(center, triangle.a);
-
-    return Circle(center, radius);
 }
