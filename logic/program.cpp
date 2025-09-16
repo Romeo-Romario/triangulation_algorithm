@@ -12,16 +12,23 @@ using std::endl;
 using std::vector;
 int main()
 {
-    Triangle t1(Point(0, 5), Point(0, -5), Point(1, 0));
-    Triangle t2(Point(0, 5), Point(0, -5), Point(-1, 0));
+    vector<Point> starting_points = {
+        Point(-2.0, 0.0),
+        Point(0.0, 2),
+        Point(2.0, 0),
+        Point(0.0, -2.0)};
 
-    vector<Triangle> tt = {t1, t2};
+    // vector<Point> result = insert_grid(starting_points, 3.0);
 
-    vector<Triangle> result = check_triangulation(tt);
+    // for (const auto &point : result)
+    // {
+    //     cout << point << endl;
+    // }
 
-    cout << "Result\n";
-    for (const auto &t : result)
+    vector<Edge> r = points_to_sorted_edges(starting_points);
+
+    for (const auto &point : r)
     {
-        cout << t;
+        cout << point.a << " " << point.b << endl;
     }
 }

@@ -1,6 +1,7 @@
 #pragma once
 #include <iostream>
 #include <vector>
+#include <limits>
 #include <cmath> // For std::sqrt
 
 class Point
@@ -60,3 +61,5 @@ public:
 double distance(const Point &p1, const Point &p2);
 bool check_if_point_inside_circle(const Point &p, const Circle &c);
 void rotate_edge(Triangle &t1, Triangle &t2);
+bool nearlyEqual(double a, double b);
+std::vector<Edge> points_to_sorted_edges(const std::vector<Point> &points);

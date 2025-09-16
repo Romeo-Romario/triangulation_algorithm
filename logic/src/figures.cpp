@@ -12,6 +12,12 @@ double distance(const Point &p1, const Point &p2)
     return std::sqrt(std::pow((p2.x - p1.x), 2) + std::pow((p2.y - p1.y), 2));
 }
 
+bool nearlyEqual(double a, double b)
+{
+    constexpr double eps = 0.003;
+    return std::fabs(a - b) < eps;
+}
+
 void rotate_edge(Triangle &t1, Triangle &t2)
 {
     std::vector<Point> common_points = {};
@@ -53,6 +59,54 @@ void rotate_edge(Triangle &t1, Triangle &t2)
     cout << "to: " << t2;
 }
 
+std::vector<Edge> points_to_sorted_edges(const std::vector<Point> &points)
+{
+    std::vector<Edge> result;
+    double min_distance = std::numeric_limits<double>::max();
+
+    Point previous_point, next_point;
+    Point current_point = points[0];
+
+    for (const auto &point : points)
+    {
+        if (current_point == point)
+        {
+            continue;
+        }
+        if (distance(current_point, point) < min_distance)
+        {
+            next_point = point;
+            min_distance = distance(current_point, point);
+        }
+    }
+
+    previous_point = current_point;
+    result.push_back(Edge(current_point, next_point));
+    current_point = next_point;
+    min_distance = std::numeric_limits<double>::max();
+
+    while (result.size() != (points.size() - 1))
+    {
+        for (const auto &point : points)
+        {
+            if (previous_point == point || current_point == point)
+            {
+                continue;
+            }
+            if (distance(current_point, point) < min_distance)
+            {
+                next_point = point;
+                min_distance = distance(current_point, point);
+            }
+        }
+        result.push_back(Edge(current_point, next_point));
+        previous_point = current_point;
+        current_point = next_point;
+        min_distance = std::numeric_limits<double>::max();
+    }
+    result.push_back(Edge(current_point, points[0]));
+    return result;
+}
 //============================================
 
 bool operator==(const Point &p1, const Point &p2)

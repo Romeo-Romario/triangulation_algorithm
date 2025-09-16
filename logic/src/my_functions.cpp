@@ -69,6 +69,64 @@ bool check_edge(const std::vector<Triangle> &all_triangels,
     return true;
 }
 
+std::vector<Point> insert_grid(const std::vector<Point> &starting_points, const double &density)
+{
+    double left_edge = starting_points[0].x;
+    double right_edge = starting_points[0].x;
+    double top_edge = starting_points[0].y;
+    double bottom_egde = starting_points[0].y;
+
+    cout << "Starting\n";
+    // 1.1
+    for (const auto &point : starting_points)
+    {
+        if (left_edge > point.x)
+        {
+            left_edge = point.x;
+        }
+        if (right_edge < point.x)
+        {
+            right_edge = point.x;
+        }
+        if (top_edge < point.y)
+        {
+            top_edge = point.y;
+        }
+        if (bottom_egde > point.y)
+        {
+            bottom_egde = point.y;
+        }
+    }
+
+    // 1.2
+    Point left_top(left_edge, top_edge);
+    Point right_top(right_edge, top_edge);
+    Point left_bottom(left_edge, bottom_egde);
+    Point right_bottom(right_edge, bottom_egde);
+
+    cout << left_top << " " << left_bottom << " " << right_top << " " << right_bottom << endl;
+
+    // Build grid
+    std::vector<Point> result_points = {};
+
+    double horizontal_step = distance(left_bottom, right_bottom) / density;
+    double vertical_step = distance(left_top, left_bottom) / density;
+
+    for (double horizontal_value = left_edge; horizontal_value <= right_edge; horizontal_value += horizontal_step)
+    {
+        for (double vertical_value = bottom_egde; vertical_value <= top_edge; vertical_value += vertical_step)
+        {
+            result_points.push_back(Point(horizontal_value, vertical_value));
+        }
+    }
+
+    // Part 2 : Remove points that are outside boundaries
+
+    // 2.1
+    std::vector<Edge> boundaries = points_to_sorted_edges(starting_points);
+    return result_points;
+}
+
 std::vector<Triangle> clean_triangulation(const std::vector<Triangle> &triangulation_res, const std::vector<int> &remove_indexes)
 {
     std::vector<Triangle> result = triangulation_res;
