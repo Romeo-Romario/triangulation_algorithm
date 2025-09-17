@@ -62,49 +62,58 @@ void rotate_edge(Triangle &t1, Triangle &t2)
 std::vector<Edge> points_to_sorted_edges(const std::vector<Point> &points)
 {
     std::vector<Edge> result;
-    double min_distance = std::numeric_limits<double>::max();
-
-    Point previous_point, next_point;
-    Point current_point = points[0];
-
-    for (const auto &point : points)
+    size_t n = points.size();
+    if (n < 2)
+        return result;
+    if (n == 2)
     {
-        if (current_point == point)
-        {
-            continue;
-        }
-        if (distance(current_point, point) < min_distance)
-        {
-            next_point = point;
-            min_distance = distance(current_point, point);
-        }
+        result.emplace_back(points[0], points[1]);
+        return result;
     }
 
-    previous_point = current_point;
-    result.push_back(Edge(current_point, next_point));
-    current_point = next_point;
-    min_distance = std::numeric_limits<double>::max();
-
-    while (result.size() != (points.size() - 1))
+    // compute centroid
+    double cx = 0.0, cy = 0.0;
+    for (const auto &p : points)
     {
-        for (const auto &point : points)
-        {
-            if (previous_point == point || current_point == point)
-            {
-                continue;
-            }
-            if (distance(current_point, point) < min_distance)
-            {
-                next_point = point;
-                min_distance = distance(current_point, point);
-            }
-        }
-        result.push_back(Edge(current_point, next_point));
-        previous_point = current_point;
-        current_point = next_point;
-        min_distance = std::numeric_limits<double>::max();
+        cx += p.x;
+        cy += p.y;
     }
-    result.push_back(Edge(current_point, points[0]));
+    cx /= static_cast<double>(n);
+    cy /= static_cast<double>(n);
+
+    // build angle+dist table
+    struct Entry
+    {
+        Point p;
+        double ang;
+        double dist2;
+    };
+    std::vector<Entry> table;
+    table.reserve(n);
+    for (const auto &p : points)
+    {
+        double dx = p.x - cx;
+        double dy = p.y - cy;
+        double ang = std::atan2(dy, dx);
+        double d2 = dx * dx + dy * dy;
+        table.push_back({p, ang, d2});
+    }
+
+    const double ANG_EPS = 1e-12;
+    std::sort(table.begin(), table.end(), [&](const Entry &A, const Entry &B)
+              {
+        if (std::fabs(A.ang - B.ang) < ANG_EPS)
+            return A.dist2 < B.dist2; // tie-break: nearer point first
+        return A.ang < B.ang; });
+
+    // form edges in sorted order (wrap around)
+    for (size_t i = 0; i < n; ++i)
+    {
+        const Point &pa = table[i].p;
+        const Point &pb = table[(i + 1) % n].p;
+        result.emplace_back(pa, pb);
+    }
+
     return result;
 }
 
