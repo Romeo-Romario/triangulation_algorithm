@@ -2,6 +2,7 @@
 #include <iostream>
 #include <vector>
 #include <limits>
+#include <algorithm>
 #include <cmath> // For std::sqrt
 #include <algorithm>
 

@@ -162,6 +162,14 @@ std::vector<Triangle> generate_triangles(const std::vector<Point> &points)
             }
         }
 
+        triangulation_full.erase(
+            std::remove_if(triangulation_full.begin(), triangulation_full.end(),
+                           [&](const Triangle &t)
+                           {
+                               return std::find(bad_triangles.begin(), bad_triangles.end(), t) != bad_triangles.end();
+                           }),
+            triangulation_full.end());
+
         // 3.2
         std::vector<Edge> polygon = {};
         for (int triangle_index = 0; triangle_index < bad_triangles.size(); triangle_index++)
