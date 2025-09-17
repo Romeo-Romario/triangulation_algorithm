@@ -104,6 +104,14 @@ std::vector<Triangle> generate_triangles(const std::vector<Point> &points)
             }
         }
 
+        triangulation_full.erase(
+            std::remove_if(triangulation_full.begin(), triangulation_full.end(),
+                           [&](const Triangle &t)
+                           {
+                               return std::find(bad_triangles.begin(), bad_triangles.end(), t) != bad_triangles.end();
+                           }),
+            triangulation_full.end());
+
         // 3.2
         std::vector<Edge> polygon = {};
         for (int triangle_index = 0; triangle_index < bad_triangles.size(); triangle_index++)
@@ -187,12 +195,12 @@ std::vector<Triangle> triangulation(const std::vector<Point> &points)
         cout << triangle;
     }
 
-    std::vector<Triangle> post_check_triangulation = check_triangulation(initial_triangulation);
-    cout << "Triangles after rotating edges: \n";
-    for (const auto &triangle : post_check_triangulation)
-    {
-        cout << triangle;
-    }
+    // std::vector<Triangle> post_check_triangulation = check_triangulation(initial_triangulation);
+    // cout << "Triangles after rotating edges: \n";
+    // for (const auto &triangle : post_check_triangulation)
+    // {
+    //     cout << triangle;
+    // }
 
-    return post_check_triangulation;
+    return initial_triangulation;
 }

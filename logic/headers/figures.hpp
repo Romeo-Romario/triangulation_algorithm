@@ -1,6 +1,7 @@
 #pragma once
 #include <iostream>
 #include <vector>
+#include <algorithm>
 #include <cmath> // For std::sqrt
 
 class Point
@@ -44,6 +45,7 @@ public:
     std::vector<Edge> get_edges() const;
     std::vector<Point> get_points() const;
     bool contains_point(const Point &p) const;
+    friend bool operator==(const Triangle &t1, const Triangle &t2);
     friend std::ostream &operator<<(std::ostream &os, const Triangle &p); // mainly for debug purposes
 };
 
