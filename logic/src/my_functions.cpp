@@ -134,10 +134,10 @@ std::vector<Point> insert_grid(const std::vector<Point> &starting_points, const 
     {
         for (const auto &border_edge : boundaries)
         {
-            if (onSegment(border_edge.a, point, border_edge.b))
-            {
-                break;
-            }
+            // if (onSegment(border_edge.a, point, border_edge.b))
+            // {
+            //     break;
+            // }
             for (const auto &current_point_edge : edges_to_point(point, starting_points))
             {
                 if (intersects(border_edge, current_point_edge))
@@ -195,14 +195,6 @@ std::vector<Triangle> generate_triangles(const std::vector<Point> &points)
                 bad_triangles.push_back(triangle);
             }
         }
-
-        triangulation_full.erase(
-            std::remove_if(triangulation_full.begin(), triangulation_full.end(),
-                           [&](const Triangle &t)
-                           {
-                               return std::find(bad_triangles.begin(), bad_triangles.end(), t) != bad_triangles.end();
-                           }),
-            triangulation_full.end());
 
         // 3.2
         std::vector<Edge> polygon = {};
@@ -281,11 +273,11 @@ std::vector<Triangle> check_triangulation(const std::vector<Triangle> &traingula
 std::vector<Triangle> triangulation(const std::vector<Point> &points)
 {
     std::vector<Triangle> initial_triangulation = generate_triangles(points);
-    cout << "Triangles after initial triangles: \n";
-    for (const auto &triangle : initial_triangulation)
-    {
-        cout << triangle;
-    }
+    // cout << "Triangles after initial triangles: \n";
+    // for (const auto &triangle : initial_triangulation)
+    // {
+    //     cout << triangle;
+    // }
 
     // std::vector<Triangle> post_check_triangulation = check_triangulation(initial_triangulation);
     // cout << "Triangles after rotating edges: \n";

@@ -138,17 +138,22 @@ bool intersects(const Edge &e1, const Edge &e2)
 
     // General case
     if (o1 != o2 && o3 != o4)
+    {
+        // exclude endpoint-only case
+        if (p1 == p2 || p1 == q2 || q1 == p2 || q1 == q2)
+            return false;
         return true;
+    }
 
     // Special cases (collinear + overlap)
     if (o1 == 0 && onSegment(p1, p2, q1))
-        return true;
+        return !(p2 == p1 || p2 == q1);
     if (o2 == 0 && onSegment(p1, q2, q1))
-        return true;
+        return !(q2 == p1 || q2 == q1);
     if (o3 == 0 && onSegment(p2, p1, q2))
-        return true;
+        return !(p1 == p2 || p1 == q2);
     if (o4 == 0 && onSegment(p2, q1, q2))
-        return true;
+        return !(q1 == p2 || q1 == q2);
 
     return false;
 }
@@ -238,17 +243,6 @@ double Triangle::perimeter() const
     Edge bc(b, c);
     Edge ca(c, a);
     return ab.length() + bc.length() + ca.length();
-}
-
-bool operator==(const Triangle &t1, const Triangle &t2)
-{
-    std::vector<Point> p1 = {t1.a, t1.b, t1.c};
-    std::vector<Point> p2 = {t2.a, t2.b, t2.c};
-    std::sort(p1.begin(), p1.end(), [](const Point &a, const Point &b)
-              { return a.x < b.x || (a.x == b.x && a.y < b.y); });
-    std::sort(p2.begin(), p2.end(), [](const Point &a, const Point &b)
-              { return a.x < b.x || (a.x == b.x && a.y < b.y); });
-    return p1 == p2;
 }
 
 std::vector<Edge> Triangle::get_edges() const
