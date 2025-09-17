@@ -2,7 +2,9 @@
 #include <iostream>
 #include <vector>
 #include <limits>
+#include <algorithm>
 #include <cmath> // For std::sqrt
+#include <algorithm>
 
 class Point
 {
@@ -45,6 +47,7 @@ public:
     std::vector<Edge> get_edges() const;
     std::vector<Point> get_points() const;
     bool contains_point(const Point &p) const;
+    friend bool operator==(const Triangle &t1, const Triangle &t2);
     friend std::ostream &operator<<(std::ostream &os, const Triangle &p); // mainly for debug purposes
 };
 
@@ -63,6 +66,7 @@ bool check_if_point_inside_circle(const Point &p, const Circle &c);
 void rotate_edge(Triangle &t1, Triangle &t2);
 bool nearlyEqual(double a, double b);
 std::vector<Edge> points_to_sorted_edges(const std::vector<Point> &points);
+
 std::vector<Edge> edges_to_point(const Point &target_point, const std::vector<Point> &points);
 // Intersection functions
 int orientation(const Point &p, const Point &q, const Point &r);

@@ -196,6 +196,14 @@ std::vector<Triangle> generate_triangles(const std::vector<Point> &points)
             }
         }
 
+        triangulation_full.erase(
+            std::remove_if(triangulation_full.begin(), triangulation_full.end(),
+                           [&](const Triangle &t)
+                           {
+                               return std::find(bad_triangles.begin(), bad_triangles.end(), t) != bad_triangles.end();
+                           }),
+            triangulation_full.end());
+
         // 3.2
         std::vector<Edge> polygon = {};
         for (int triangle_index = 0; triangle_index < bad_triangles.size(); triangle_index++)
@@ -208,6 +216,14 @@ std::vector<Triangle> generate_triangles(const std::vector<Point> &points)
                 }
             }
         }
+
+        triangulation_full.erase(
+            std::remove_if(triangulation_full.begin(), triangulation_full.end(),
+                           [&](const Triangle &t)
+                           {
+                               return std::find(bad_triangles.begin(), bad_triangles.end(), t) != bad_triangles.end();
+                           }),
+            triangulation_full.end());
 
         // 3.3
         for (const auto &edge : polygon)
@@ -236,7 +252,6 @@ std::vector<Triangle> check_triangulation(const std::vector<Triangle> &traingula
 {
     std::vector<Triangle> oper_triangulation = traingulation;
     int repeat_count = 0;
-    // Go by index to make changes of triangles more simple
     for (int external_index = 0; external_index < oper_triangulation.size(); external_index++)
     {
         Circle cir_circle = Circle::calculate_circumscribed_circle(oper_triangulation[external_index]);
@@ -255,16 +270,9 @@ std::vector<Triangle> check_triangulation(const std::vector<Triangle> &traingula
                     !oper_triangulation[external_index].contains_point(point))
                 {
                     rotate_edge(oper_triangulation[external_index], oper_triangulation[internal_index]);
-                    // repeat_count += 1;
                 }
-
-                // if (repeat_count > 100){
-                //     cout << "Cycle of edge rotating" << endl;
-                //     break;
-                // }
             }
         }
-        // repeat_count = 0;
     }
 
     return oper_triangulation;
@@ -279,12 +287,12 @@ std::vector<Triangle> triangulation(const std::vector<Point> &points)
         cout << triangle;
     }
 
-    std::vector<Triangle> post_check_triangulation = check_triangulation(initial_triangulation);
-    cout << "Triangles after rotating edges: \n";
-    for (const auto &triangle : post_check_triangulation)
-    {
-        cout << triangle;
-    }
+    // std::vector<Triangle> post_check_triangulation = check_triangulation(initial_triangulation);
+    // cout << "Triangles after rotating edges: \n";
+    // for (const auto &triangle : post_check_triangulation)
+    // {
+    //     cout << triangle;
+    // }
 
-    return post_check_triangulation;
+    return initial_triangulation;
 }
