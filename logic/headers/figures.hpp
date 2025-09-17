@@ -3,6 +3,7 @@
 #include <vector>
 #include <algorithm>
 #include <cmath> // For std::sqrt
+#include <algorithm>
 
 class Point
 {
@@ -62,3 +63,5 @@ public:
 double distance(const Point &p1, const Point &p2);
 bool check_if_point_inside_circle(const Point &p, const Circle &c);
 void rotate_edge(Triangle &t1, Triangle &t2);
+Point compute_centroid(const std::vector<Point> &points);
+void sort_points_clockwise(std::vector<Point> &points);

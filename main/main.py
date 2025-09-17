@@ -4,8 +4,8 @@ import numpy as np
 from geometry import Point, Circle, get_start_triangle, triangulation
 
 # incoming_data = [Point(0, 0), Point(0, 10), Point(3, 5), Point(6, 10), Point(6, 0)]
-incoming_data = []
 
+incoming_data = []
 for i in range(0, 5):
     for j in range(0, 5):
         incoming_data.append(Point(i, j))
