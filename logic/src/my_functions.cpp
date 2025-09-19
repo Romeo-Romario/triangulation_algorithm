@@ -286,3 +286,15 @@ std::vector<Triangle> triangulation(const std::vector<Point> &points)
 
     return initial_triangulation;
 }
+
+std::vector<Circle> get_circumscribed_circles(const std::vector<Triangle> &triangulation)
+{
+    std::vector<Circle> result = {};
+
+    for (const auto &triangle : triangulation)
+    {
+        result.emplace_back(Circle::calculate_circumscribed_circle(triangle));
+    }
+
+    return result;
+}

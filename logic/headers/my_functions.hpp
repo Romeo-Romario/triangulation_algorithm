@@ -10,3 +10,4 @@ std::vector<Triangle> generate_triangles(const std::vector<Point> &points);
 std::vector<Triangle> check_triangulation(const std::vector<Triangle> &traingulation);
 std::vector<Point> insert_grid(const std::vector<Point> &starting_points, const double &density, const double &delta);
 std::vector<Triangle> triangulation(const std::vector<Point> &points);
+std::vector<Circle> get_circumscribed_circles(const std::vector<Triangle> &triangulation);

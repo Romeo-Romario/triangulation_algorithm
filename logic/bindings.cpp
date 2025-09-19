@@ -38,4 +38,5 @@ PYBIND11_MODULE(geometry, m)
     m.def("get_start_triangle", &initial_super_triangle, "Generate the starting triangle from a set of points");
     m.def("triangulation", &triangulation, "Runs the generate_triangles algorithm");
     m.def("generate_grid", &insert_grid, "Generate grid of additional vericies");
+    m.def("get_circles", &get_circumscribed_circles, "Returns circumscribed circles of traingulation");
 }
