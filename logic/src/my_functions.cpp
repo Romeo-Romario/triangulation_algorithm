@@ -69,6 +69,96 @@ bool check_edge(const std::vector<Triangle> &all_triangels,
     return true;
 }
 
+std::vector<Point> insert_grid(const std::vector<Point> &starting_points, const double &density, const double &delta)
+{
+    double left_edge = starting_points[0].x;
+    double right_edge = starting_points[0].x;
+    double top_edge = starting_points[0].y;
+    double bottom_egde = starting_points[0].y;
+
+    cout << "Starting\n";
+    // 1.1
+    for (const auto &point : starting_points)
+    {
+        if (left_edge > point.x)
+        {
+            left_edge = point.x;
+        }
+        if (right_edge < point.x)
+        {
+            right_edge = point.x;
+        }
+        if (top_edge < point.y)
+        {
+            top_edge = point.y;
+        }
+        if (bottom_egde > point.y)
+        {
+            bottom_egde = point.y;
+        }
+    }
+
+    // 1.2
+    Point left_top(left_edge, top_edge);
+    Point right_top(right_edge, top_edge);
+    Point left_bottom(left_edge, bottom_egde);
+    Point right_bottom(right_edge, bottom_egde);
+
+    cout << left_top << " " << left_bottom << " " << right_top << " " << right_bottom << endl;
+
+    // Build grid
+    std::vector<Point> full_grid_points = {};
+
+    double horizontal_step = distance(left_bottom, right_bottom) / density;
+    double vertical_step = distance(left_top, left_bottom) / density;
+    int iteration = 0;
+    for (double horizontal_value = left_edge; horizontal_value <= right_edge; horizontal_value += horizontal_step)
+    {
+        for (double vertical_value = bottom_egde; vertical_value <= top_edge; vertical_value += vertical_step)
+        {
+            full_grid_points.push_back(Point(horizontal_value + delta * (-1.0 * ((iteration % 2) != 0)), vertical_value + delta * (-1.0 * ((iteration % 2) == 0))));
+            iteration++;
+        }
+    }
+
+    // Part 2 : Remove points that are outside boundaries
+
+    // 2.1
+    bool should_add_point{true};
+    std::vector<Edge> boundaries = points_to_sorted_edges(starting_points);
+    for (const auto &edge : boundaries)
+    {
+        cout << "Boundary edge: " << edge.a << " " << edge.b << endl;
+    }
+    std::vector<Point> result_points = {};
+    for (const auto &point : full_grid_points)
+    {
+        for (const auto &border_edge : boundaries)
+        {
+            for (const auto &current_point_edge : edges_to_point(point, starting_points))
+            {
+                if (intersects(border_edge, current_point_edge))
+                {
+                    should_add_point = false;
+                    break;
+                }
+            }
+        }
+        if (should_add_point)
+        {
+            result_points.push_back(point);
+        }
+        should_add_point = true;
+    }
+
+    double boundary_step;
+    for (const auto &edge : boundaries)
+    {
+        boundary_step = distance(edge.a, edge.b) / density;
+    }
+    return result_points;
+}
+
 std::vector<Triangle> clean_triangulation(const std::vector<Triangle> &triangulation_res, const std::vector<int> &remove_indexes)
 {
     std::vector<Triangle> result = triangulation_res;
@@ -103,14 +193,6 @@ std::vector<Triangle> generate_triangles(const std::vector<Point> &points)
                 bad_triangles.push_back(triangle);
             }
         }
-
-        triangulation_full.erase(
-            std::remove_if(triangulation_full.begin(), triangulation_full.end(),
-                           [&](const Triangle &t)
-                           {
-                               return std::find(bad_triangles.begin(), bad_triangles.end(), t) != bad_triangles.end();
-                           }),
-            triangulation_full.end());
 
         // 3.2
         std::vector<Edge> polygon = {};
@@ -189,11 +271,11 @@ std::vector<Triangle> check_triangulation(const std::vector<Triangle> &traingula
 std::vector<Triangle> triangulation(const std::vector<Point> &points)
 {
     std::vector<Triangle> initial_triangulation = generate_triangles(points);
-    cout << "Triangles after initial triangles: \n";
-    for (const auto &triangle : initial_triangulation)
-    {
-        cout << triangle;
-    }
+    // cout << "Triangles after initial triangles: \n";
+    // for (const auto &triangle : initial_triangulation)
+    // {
+    //     cout << triangle;
+    // }
 
     // std::vector<Triangle> post_check_triangulation = check_triangulation(initial_triangulation);
     // cout << "Triangles after rotating edges: \n";

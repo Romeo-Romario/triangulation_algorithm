@@ -12,6 +12,12 @@ double distance(const Point &p1, const Point &p2)
     return std::sqrt(std::pow((p2.x - p1.x), 2) + std::pow((p2.y - p1.y), 2));
 }
 
+bool nearlyEqual(double a, double b)
+{
+    constexpr double eps = 0.003;
+    return std::fabs(a - b) < eps;
+}
+
 void rotate_edge(Triangle &t1, Triangle &t2)
 {
     std::vector<Point> common_points = {};
@@ -30,9 +36,6 @@ void rotate_edge(Triangle &t1, Triangle &t2)
 
     if (common_points.size() < 2)
     {
-        // cout << "Triangles:\n"
-        //      << t1 << "and:\n"
-        //      << t2 << "have only one or less common point" << endl;
         return;
     }
 
@@ -44,15 +47,128 @@ void rotate_edge(Triangle &t1, Triangle &t2)
         }
     }
 
-    // cout << "t1 was changed from: " << t1;
     t1 = Triangle(diff_points[0], diff_points[1], common_points[0]);
-    // cout << "to: " << t1;
 
-    // cout << "t2 was changed from: " << t2;
     t2 = Triangle(diff_points[0], diff_points[1], common_points[1]);
-    // cout << "to: " << t2;
 }
 
+std::vector<Edge> points_to_sorted_edges(const std::vector<Point> &points)
+{
+    std::vector<Edge> result;
+    size_t n = points.size();
+    if (n < 2)
+        return result;
+    if (n == 2)
+    {
+        result.emplace_back(points[0], points[1]);
+        return result;
+    }
+
+    // compute centroid
+    double cx = 0.0, cy = 0.0;
+    for (const auto &p : points)
+    {
+        cx += p.x;
+        cy += p.y;
+    }
+    cx /= static_cast<double>(n);
+    cy /= static_cast<double>(n);
+
+    // build angle+dist table
+    struct Entry
+    {
+        Point p;
+        double ang;
+        double dist2;
+    };
+    std::vector<Entry> table;
+    table.reserve(n);
+    for (const auto &p : points)
+    {
+        double dx = p.x - cx;
+        double dy = p.y - cy;
+        double ang = std::atan2(dy, dx);
+        double d2 = dx * dx + dy * dy;
+        table.push_back({p, ang, d2});
+    }
+
+    const double ANG_EPS = 1e-12;
+    std::sort(table.begin(), table.end(), [&](const Entry &A, const Entry &B)
+              {
+        if (std::fabs(A.ang - B.ang) < ANG_EPS)
+            return A.dist2 < B.dist2; // tie-break: nearer point first
+        return A.ang < B.ang; });
+
+    // form edges in sorted order (wrap around)
+    for (size_t i = 0; i < n; ++i)
+    {
+        const Point &pa = table[i].p;
+        const Point &pb = table[(i + 1) % n].p;
+        result.emplace_back(pa, pb);
+    }
+
+    return result;
+}
+
+int orientation(const Point &p, const Point &q, const Point &r)
+{
+    double val = (q.y - p.y) * (r.x - q.x) -
+                 (q.x - p.x) * (r.y - q.y);
+
+    if (val == 0.0)
+        return 0;
+    return (val > 0.0) ? 1 : 2;
+}
+
+// check if point q lies on segment pr
+bool onSegment(const Point &p, const Point &q, const Point &r)
+{
+    return (q.x <= std::max(p.x, r.x) && q.x >= std::min(p.x, r.x) &&
+            q.y <= std::max(p.y, r.y) && q.y >= std::min(p.y, r.y));
+}
+
+// main intersection check
+bool intersects(const Edge &e1, const Edge &e2)
+{
+    Point p1 = e1.a, q1 = e1.b;
+    Point p2 = e2.a, q2 = e2.b;
+
+    int o1 = orientation(p1, q1, p2);
+    int o2 = orientation(p1, q1, q2);
+    int o3 = orientation(p2, q2, p1);
+    int o4 = orientation(p2, q2, q1);
+
+    // General case
+    if (o1 != o2 && o3 != o4)
+    {
+        // exclude endpoint-only case
+        if (p1 == p2 || p1 == q2 || q1 == p2 || q1 == q2)
+            return false;
+        return true;
+    }
+
+    // Special cases (collinear + overlap)
+    if (o1 == 0 && onSegment(p1, p2, q1))
+        return !(p2 == p1 || p2 == q1);
+    if (o2 == 0 && onSegment(p1, q2, q1))
+        return !(q2 == p1 || q2 == q1);
+    if (o3 == 0 && onSegment(p2, p1, q2))
+        return !(p1 == p2 || p1 == q2);
+    if (o4 == 0 && onSegment(p2, q1, q2))
+        return !(q1 == p2 || q1 == q2);
+
+    return false;
+}
+
+std::vector<Edge> edges_to_point(const Point &target_point, const std::vector<Point> &points)
+{
+    std::vector<Edge> result = {};
+    for (const auto &point : points)
+    {
+        result.push_back(Edge(target_point, point));
+    }
+    return result;
+}
 //============================================
 
 bool operator==(const Point &p1, const Point &p2)
@@ -129,17 +245,6 @@ double Triangle::perimeter() const
     Edge bc(b, c);
     Edge ca(c, a);
     return ab.length() + bc.length() + ca.length();
-}
-
-bool operator==(const Triangle &t1, const Triangle &t2)
-{
-    std::vector<Point> p1 = {t1.a, t1.b, t1.c};
-    std::vector<Point> p2 = {t2.a, t2.b, t2.c};
-    std::sort(p1.begin(), p1.end(), [](const Point &a, const Point &b)
-              { return a.x < b.x || (a.x == b.x && a.y < b.y); });
-    std::sort(p2.begin(), p2.end(), [](const Point &a, const Point &b)
-              { return a.x < b.x || (a.x == b.x && a.y < b.y); });
-    return p1 == p2;
 }
 
 std::vector<Edge> Triangle::get_edges() const

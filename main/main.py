@@ -1,23 +1,42 @@
 import matplotlib.pyplot as plt
 from matplotlib.patches import Circle as C
 import numpy as np
-from geometry import Point, Circle, get_start_triangle, triangulation
+from geometry import Point, generate_grid, Circle, get_start_triangle, triangulation
 
 # incoming_data = [Point(0, 0), Point(0, 10), Point(3, 5), Point(6, 10), Point(6, 0)]
+# incoming_data = [Point(-2, 0), Point(2, 0), Point(0, 2), Point(0, -2)]
 
-incoming_data = []
-for i in range(0, 5):
-    for j in range(0, 5):
-        incoming_data.append(Point(i, j))
+incoming_data = [
+    Point(-2.5, 2.0),
+    Point(-1.0, 2.0),
+    Point(1.0, 1.0),
+    Point(2.5, -1.0),
+    Point(0.5, -1.0),
+    Point(-1.5, 0),
+]
 
-triangulation_res = triangulation(incoming_data)
+
+additinal_vertexes = generate_grid(incoming_data, 4.0, 0.05)
+
+all_points = [*incoming_data, *additinal_vertexes]
+
+triangulation_res = triangulation(all_points)
 
 
 fig, ax = plt.subplots()
 
 x = [p.x for p in incoming_data]
 y = [p.y for p in incoming_data]
-ax.scatter(x, y, color="blue", label="Input Points")
+ax.scatter(x, y, color="red", label="Input Points")
+
+ax.scatter(
+    [p.x for p in additinal_vertexes],
+    [p.y for p in additinal_vertexes],
+    color="blue",
+    s=50,
+    label="Added points",
+    alpha=0.6,
+)
 
 colors = plt.cm.tab10(np.linspace(0, 1, len(triangulation_res)))
 for i, tri in enumerate(triangulation_res):

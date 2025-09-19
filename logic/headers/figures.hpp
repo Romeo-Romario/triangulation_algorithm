@@ -1,6 +1,7 @@
 #pragma once
 #include <iostream>
 #include <vector>
+#include <limits>
 #include <algorithm>
 #include <cmath> // For std::sqrt
 #include <algorithm>
@@ -63,5 +64,11 @@ public:
 double distance(const Point &p1, const Point &p2);
 bool check_if_point_inside_circle(const Point &p, const Circle &c);
 void rotate_edge(Triangle &t1, Triangle &t2);
-Point compute_centroid(const std::vector<Point> &points);
-void sort_points_clockwise(std::vector<Point> &points);
+bool nearlyEqual(double a, double b);
+std::vector<Edge> points_to_sorted_edges(const std::vector<Point> &points);
+
+std::vector<Edge> edges_to_point(const Point &target_point, const std::vector<Point> &points);
+// Intersection functions
+int orientation(const Point &p, const Point &q, const Point &r);
+bool onSegment(const Point &p, const Point &q, const Point &r);
+bool intersects(const Edge &e1, const Edge &e2);
