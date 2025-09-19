@@ -69,7 +69,7 @@ bool check_edge(const std::vector<Triangle> &all_triangels,
     return true;
 }
 
-std::vector<Point> insert_grid(const std::vector<Point> &starting_points, const double &density)
+std::vector<Point> insert_grid(const std::vector<Point> &starting_points, const double &density, const double &delta)
 {
     double left_edge = starting_points[0].x;
     double right_edge = starting_points[0].x;
@@ -111,12 +111,13 @@ std::vector<Point> insert_grid(const std::vector<Point> &starting_points, const 
 
     double horizontal_step = distance(left_bottom, right_bottom) / density;
     double vertical_step = distance(left_top, left_bottom) / density;
-
+    int iteration = 0;
     for (double horizontal_value = left_edge; horizontal_value <= right_edge; horizontal_value += horizontal_step)
     {
         for (double vertical_value = bottom_egde; vertical_value <= top_edge; vertical_value += vertical_step)
         {
-            full_grid_points.push_back(Point(horizontal_value, vertical_value));
+            full_grid_points.push_back(Point(horizontal_value + delta * (-1.0 * ((iteration % 2) != 0)), vertical_value + delta * (-1.0 * ((iteration % 2) == 0))));
+            iteration++;
         }
     }
 
@@ -134,10 +135,6 @@ std::vector<Point> insert_grid(const std::vector<Point> &starting_points, const 
     {
         for (const auto &border_edge : boundaries)
         {
-            // if (onSegment(border_edge.a, point, border_edge.b))
-            // {
-            //     break;
-            // }
             for (const auto &current_point_edge : edges_to_point(point, starting_points))
             {
                 if (intersects(border_edge, current_point_edge))
@@ -154,9 +151,10 @@ std::vector<Point> insert_grid(const std::vector<Point> &starting_points, const 
         should_add_point = true;
     }
 
-    for (auto &point : result_points)
+    double boundary_step;
+    for (const auto &edge : boundaries)
     {
-        cout << point << endl;
+        boundary_step = distance(edge.a, edge.b) / density;
     }
     return result_points;
 }

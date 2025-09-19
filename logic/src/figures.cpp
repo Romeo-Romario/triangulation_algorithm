@@ -36,9 +36,6 @@ void rotate_edge(Triangle &t1, Triangle &t2)
 
     if (common_points.size() < 2)
     {
-        // cout << "Triangles:\n"
-        //      << t1 << "and:\n"
-        //      << t2 << "have only one or less common point" << endl;
         return;
     }
 
@@ -50,13 +47,9 @@ void rotate_edge(Triangle &t1, Triangle &t2)
         }
     }
 
-    // cout << "t1 was changed from: " << t1;
     t1 = Triangle(diff_points[0], diff_points[1], common_points[0]);
-    // cout << "to: " << t1;
 
-    // cout << "t2 was changed from: " << t2;
     t2 = Triangle(diff_points[0], diff_points[1], common_points[1]);
-    // cout << "to: " << t2;
 }
 
 std::vector<Edge> points_to_sorted_edges(const std::vector<Point> &points)

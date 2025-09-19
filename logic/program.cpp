@@ -18,13 +18,6 @@ int main()
         Point(2.0, 0),
         Point(0.0, -2.0)};
 
-    // vector<Point> result = insert_grid(starting_points, 3.0);
-
-    // for (const auto &point : result)
-    // {
-    //     cout << point << endl;
-    // }
-
     vector<Edge> r = points_to_sorted_edges(starting_points);
     Point _1(2.0, 2.0);
 
@@ -41,8 +34,4 @@ int main()
 
     Edge e(Point(3.5, 0.5), Point(5.5, 1.5));
     Point p(4.5, 1.0);
-
-    // cout << "Intersection: " << intersects(e1, e2) << endl;
-    // cout << "lays on edge: " << onSegment(e.a, p, e.b) << endl;
-    // cout << "No intersects: " << intersects(e1, e) << endl;
 }
